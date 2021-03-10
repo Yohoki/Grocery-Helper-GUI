@@ -84,18 +84,25 @@ namespace Grocery_Helper_GUI
         }
 
         //Use **Item.Print(ItemList);** to print entire list.
-        public static List<Item> Print(List<Item> ItemsList)
+        public static List<Item> Print(List<Item> ItemList)
         {
-            int ID = 1;
-            String Message = "";
-            Message = ("   ItemName\t\tType\tSize\tPrice\tMeals\t$/Oz\t$/Meal");
-            foreach (Item aItem in ItemsList)
+            int ID = 0;
+            Form1.listView1.Items.Clear();
+
+            foreach (Item aItem in ItemList)
             {
-                Message = Message + (ID.ToString().PadRight(3, ' ') + aItem + "\n");
+                Form1.listView1.Items.Add(new ListViewItem(new string[] {
+                    ItemList[ID].ItemName,
+                    ItemList[ID].ItemCat,
+                    ItemList[ID].ItemSize.ToString(),
+                    Convert.ToDouble(ItemList[ID].ItemPrice).ToString("C"),
+                    ItemList[ID].ItemMeals.ToString(),
+                    (Convert.ToDouble(ItemList[ID].ItemPrice) / Convert.ToDouble(ItemList[ID].ItemSize)).ToString("C"),
+                    (Convert.ToDouble(ItemList[ID].ItemPrice) / Convert.ToDouble(ItemList[ID].ItemMeals)).ToString("C")
+                }));
                 ID++;
             }
-            MessageBox.Show(Message);
-            return ItemsList;
+            return ItemList;
         }
 
         //Use **Item.Save(ItemList);** to Save ItemsList to a file with '^' delimiters.
@@ -125,36 +132,27 @@ namespace Grocery_Helper_GUI
         public static List<Item> Load()
         {
             List<Item> ItemList = new List<Item>();
-            Form1.listView1.Items.Clear();
             string Catagory = "snacks";
+            //int ID = 0;
 
             //if (!File.Exists($"./{Catagory}.txt")) { Console.WriteLine("File not Found"); Main(); }
-            if (!File.Exists($"D:/Test/{Catagory}.txt")) { Console.WriteLine("File not Found"); }//TEMP Program.Main(); }
+            if (!File.Exists($"D:/Test/{Catagory}.txt")) { Console.WriteLine("File not Found"); }
             //string[] LoadFile = File.ReadAllLines($"./{Catagory}.txt");
             string[] LoadFile = File.ReadAllLines($"D:/Test/{Catagory}.txt");
             foreach (string Line in LoadFile)
             {
-                //for (int Col = 0; Col < 5; Col++)
-                //{
-                //Console.WriteLine(Line);
                 string[] Field = Line.Split('^');
-                //ItemsArray[ItemsCount, Col] = Field[Col];
-                //Form1.listView1.Items.Add(new ListViewItem(new string[] { Field[0].ToString(), Field[3].ToString() }));
-
-                Form1.listView1.Items.Add(new ListViewItem(new string[] { Field[0], Field[1], Field[2], Convert.ToDouble(Field[3]).ToString("C"), Field[4], (Convert.ToDouble(Field[3]) / Convert.ToDouble(Field[2])).ToString("C"), (Convert.ToDouble(Field[3]) / Convert.ToDouble(Field[4])).ToString("C") }));
+                
                 ItemList.Add(new Item() {
                     ItemName = Field[0],
                     ItemCat = Field[1],
                     ItemSize = Convert.ToDouble(Field[2]),
                     ItemPrice = Convert.ToDouble(Field[3]),
-                    ItemMeals = Convert.ToDouble(Field[4]) });
-                //}
-
+                    ItemMeals = Convert.ToDouble(Field[4])
+                });
             }
-            Console.WriteLine(ItemList[0].ItemName);
             Item.Print(ItemList);
             return ItemList;
-
         }
 
 
