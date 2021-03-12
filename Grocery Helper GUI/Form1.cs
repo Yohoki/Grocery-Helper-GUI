@@ -23,7 +23,13 @@ namespace Grocery_Helper_GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ItemList = Item.Load(ItemList);
+            //ItemList.Sort();
+            //Item.Print(ItemList); <---by Price
+            ItemList.Sort(delegate (Item x, Item y)
+            {
+                return (x.ItemPrice / x.ItemSize).CompareTo((y.ItemPrice / y.ItemSize));
+            });
+            Item.Print(ItemList);
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
@@ -39,24 +45,59 @@ namespace Grocery_Helper_GUI
             Item.Save(ItemList);
             //MessageBox.Show(Item.ItemName);
         }
+
+        private void buttonRemoveItem_Click(object sender, EventArgs e)
+        {
+            ItemList.Remove(new Item() { ItemName = Form1.textBoxName.Text });
+            Item.Print(ItemList);
+        }
+
+        private void buttonAddItem_Click(object sender, EventArgs e)
+        {
+            if (   !String.IsNullOrEmpty(Form1.textBoxName.Text)
+                && !String.IsNullOrEmpty(Form1.textBoxCatEdit.Text)
+                && !String.IsNullOrEmpty(Form1.textBoxSize.Text)
+                && !String.IsNullOrEmpty(Form1.textBoxPrice.Text)
+                && !String.IsNullOrEmpty(Form1.textBoxMeals.Text)
+                )
+            {
+                ItemList.Remove(new Item() { ItemName = Form1.textBoxName.Text });
+                ItemList.Add(new Item()
+                {
+                    ItemName = Form1.textBoxName.Text,
+                    ItemCat = Form1.textBoxCatEdit.Text,
+                    ItemSize = Convert.ToDouble(Form1.textBoxSize.Text),
+                    ItemPrice = Convert.ToDouble(Form1.textBoxPrice.Text),
+                    ItemMeals = Convert.ToDouble(Form1.textBoxMeals.Text)
+                });
+                Item.Print(ItemList);
+            }
+        }
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0) { return; }
+            int Index = ItemList.FindIndex(
+                listIndex => 
+                listIndex.ItemName.Equals(
+                    listView1.SelectedItems[0].Text,
+                    StringComparison.Ordinal
+            )   );
+            Form1.textBoxName.Text    = ItemList[Index].ItemName;
+            Form1.textBoxCatEdit.Text = ItemList[Index].ItemCat;
+            Form1.textBoxSize.Text    = ItemList[Index].ItemSize.ToString();
+            Form1.textBoxPrice.Text   = ItemList[Index].ItemPrice.ToString();
+            Form1.textBoxMeals.Text   = ItemList[Index].ItemMeals.ToString();
+        }
     }
 
     public class Item : IEquatable<Item>, IComparable<Item>//, IEnumerable<Item>
     {
             //Use **ItemList.Add(new Item() { ItemName = "Test", ItemCat="snackos", ItemSize = 6, ItemPrice = 5.00, ItemMeals = 2 });** to set values
-            //Set ItemName in ItemsList
         public string ItemName { get; set; }
-
-        //Set ItemCat in ItemsList
         public string ItemCat { get; set; }
-
-        //Set ItemMeals in ItemsList
         public double ItemMeals { get; set; }
-
-        //Set ItemSize in ItemsList
         public double ItemSize { get; set; }
-
-        //Set ItemPrice in ItemsList
         public double ItemPrice { get; set; }
 
 
@@ -86,18 +127,16 @@ namespace Grocery_Helper_GUI
 
         // Not sure if needed. Can get hash from ItemNames, but not really useful for this project.
         // Maybe in other projects, I could use an ID and return that insead of a hash.
-        // Use **ItemList.GetHashCode();** or **ItemList[1].GetHashCode()** to hash entire list or single item.
         public override int GetHashCode()
         {
             return 0;
-            //return HashCode.Combine(ItemName);
         }
 
         //Use** ItemList.Remove(new Item() { ItemName = "Chex Mix" });** to delete the whole row.
         public bool Equals(Item other)
         {
             if (other == null) return false;
-            return (this.ItemName.Equals(other.ItemName));
+            return (this.ItemName.ToLower().Equals(other.ItemName.ToLower()));
         }
 
         //Use **Item.Print(ItemList);** to print entire list.
@@ -127,12 +166,9 @@ namespace Grocery_Helper_GUI
         //CURRENTLY: uses ItemsList[0].ItemCat to determine filename.
         public static List<Item> Save(List<Item> ItemList)
         {
-            //string SaveLine ="";
-            //StreamWriter SaveFile = File.AppendText($"./{ItemsList[0].ItemCat}.txt");
             StreamWriter SaveFile = File.AppendText($"D:/Test/{Form1.textBoxCat.Text.ToString()}2.txt");
             foreach (Item aItem in ItemList)
             {
-                //SaveLine = SaveLine + aItem + "^";
                 SaveFile.WriteLine(
                       aItem.ItemName + "^"
                     + aItem.ItemCat + "^"
@@ -149,20 +185,13 @@ namespace Grocery_Helper_GUI
 
         //Use **Item.Load()** to load this module.
         //Use **List<Item> ItemList = Item.Load();** to load this module and return the ItemList.
-        //Currently only loads hardcoded file.
         public static List<Item> Load(List<Item> ItemList)
         {
-            //List<Item> ItemList = new List<Item>();
-            string Catagory = "snacks";
-            //int ID = 0;
 
-            //if (!File.Exists($"./{Catagory}.txt")) { Console.WriteLine("File not Found"); Main(); }
             if (!File.Exists($"D:/Test/{Form1.textBoxCat.Text?.ToLower()}.txt")) { Console.WriteLine("File not Found"); return ItemList; }
-            //string[] LoadFile = File.ReadAllLines($"./{Catagory}.txt");
             if (!String.IsNullOrEmpty(Form1.textBoxCat.Text))
             {
                 string[] LoadFile = File.ReadAllLines($"D:/Test/{Form1.textBoxCat.Text?.ToLower()}.txt");
-                //string[] LoadFile = File.ReadAllLines($"D:/Test/{Catagory.ToLower()}.txt");
 
                 foreach (string Line in LoadFile)
                 {
@@ -184,17 +213,6 @@ namespace Grocery_Helper_GUI
         public static List<Item> Load()
         {
             List<Item> ItemList = new List<Item>();
-            //int ID = 0;
-
-            //if (!File.Exists($"./{Catagory}.txt")) { Console.WriteLine("File not Found"); Main(); }
-            //if (!File.Exists($"D:/Test/{Catagory}.txt")) { Console.WriteLine("File not Found"); }
-            //string[] LoadFile = File.ReadAllLines($"./{Catagory}.txt");
-            //string[] LoadFile = File.ReadAllLines($"D:/Test/{Catagory}.txt");
-                //string[] LoadFile = File.ReadAllLines($"D:/Test/{Catagory.ToLower()}.txt");
-
-            //foreach (string Line in LoadFile)
-            //{
-            //    string[] Field = Line.Split('^');
                 
                 ItemList.Add(new Item()
                 {
@@ -204,7 +222,6 @@ namespace Grocery_Helper_GUI
                     ItemPrice = 0,
                     ItemMeals = 0
                 });
-            //}
             return ItemList;
         }
 
@@ -214,8 +231,6 @@ namespace Grocery_Helper_GUI
         {
             // A null value means that this object is greater.
             if (compareItem == null) { return 1; }
-
-            //else { return this.ItemPrice.CompareTo(compareItem.ItemPrice); }
             else { return this.ItemPrice.CompareTo(compareItem.ItemPrice); }
         }
     }
