@@ -17,7 +17,7 @@ namespace Grocery_Helper_GUI
 
         private List<Item> Save(List<Item> Itemlist)
         {
-            StreamWriter SaveFile = File.CreateText($"D:/Test/{textBoxCat.Text}.txt");
+            StreamWriter SaveFile = File.CreateText($"./Grocery Lists/{textBoxCat.Text}.txt");
             foreach (Item aItem in ItemList)
             {
                 SaveFile.WriteLine(aItem.ToString("Save"));
@@ -25,7 +25,7 @@ namespace Grocery_Helper_GUI
             }
             SaveFile.Close();
             //Open notepad after saving. Not needed anymore.
-            //Process.Start("notepad.exe", $"D:/Test/{textBoxCat.Text}.txt");
+            //Process.Start("notepad.exe", $"./Grocery Lists/{textBoxCat.Text}.txt");
             return ItemList;
         }
         public static List<Item> Init()
@@ -45,10 +45,10 @@ namespace Grocery_Helper_GUI
         public List<Item> LoadFile(List<Item> ItemList)
         {
 
-            if (!File.Exists($"D:/Test/{textBoxCat.Text?.ToLower()}.txt")) { Console.WriteLine("File not Found"); return ItemList; }
+            if (!File.Exists($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt")) { MessageBox.Show("File not Found"); return ItemList; }
             if (!String.IsNullOrEmpty(textBoxCat.Text))
             {
-                string[] LoadFile = File.ReadAllLines($"D:/Test/{textBoxCat.Text?.ToLower()}.txt");
+                string[] LoadFile = File.ReadAllLines($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt");
 
                 foreach (string Line in LoadFile)
                 {
@@ -124,6 +124,7 @@ namespace Grocery_Helper_GUI
                 });
                 Print(ItemList);
             }
+            MessageBox.Show("Please fill in all boxes!");
         }
 
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -153,12 +154,12 @@ namespace Grocery_Helper_GUI
                     case 2:  return x.ItemSize.CompareTo(y.ItemSize);
                     case 3:  return x.ItemPrice.CompareTo(y.ItemPrice);
                     case 4:  return x.ItemMeals.CompareTo(y.ItemMeals);
-                    case 5:  return (x.ItemPrice / x.ItemSize).CompareTo((y.ItemPrice / y.ItemSize));
-                    case 6:  return (x.ItemPrice / x.ItemMeals).CompareTo((y.ItemPrice / y.ItemMeals));
+                    case 5:  return (x.ItemPrice / x.ItemSize).CompareTo(y.ItemPrice / y.ItemSize);
+                    case 6:  return (x.ItemPrice / x.ItemMeals).CompareTo(y.ItemPrice / y.ItemMeals);
                 }
-                });
-                Print(ItemList);
-                return;
+            });
+            Print(ItemList);
+            //return;
         }
     }
 }
