@@ -30,7 +30,7 @@ namespace Grocery_Helper_GUI
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
-            listView1 = new System.Windows.Forms.ListView();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.ColumnItemName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnItemCat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnItemSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -40,7 +40,7 @@ namespace Grocery_Helper_GUI
             this.ColumnItemPPM = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonLoad = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
-            textBoxCat = new System.Windows.Forms.TextBox();
+            this.textBoxCat = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -50,11 +50,11 @@ namespace Grocery_Helper_GUI
             this.label1 = new System.Windows.Forms.Label();
             this.buttonRemoveItem = new System.Windows.Forms.Button();
             this.buttonAddItem = new System.Windows.Forms.Button();
-            textBoxMeals = new System.Windows.Forms.TextBox();
-            textBoxPrice = new System.Windows.Forms.TextBox();
-            textBoxSize = new System.Windows.Forms.TextBox();
-            textBoxCatEdit = new System.Windows.Forms.TextBox();
-            textBoxName = new System.Windows.Forms.TextBox();
+            this.textBoxMeals = new System.Windows.Forms.TextBox();
+            this.textBoxPrice = new System.Windows.Forms.TextBox();
+            this.textBoxSize = new System.Windows.Forms.TextBox();
+            this.textBoxCatEdit = new System.Windows.Forms.TextBox();
+            this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +71,7 @@ namespace Grocery_Helper_GUI
             // 
             // listView1
             // 
-            listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnItemName,
             this.ColumnItemCat,
             this.ColumnItemSize,
@@ -79,16 +79,16 @@ namespace Grocery_Helper_GUI
             this.ColumnItemMeals,
             this.ColumnItemPPS,
             this.ColumnItemPPM});
-            listView1.FullRowSelect = true;
-            listView1.HideSelection = false;
-            listView1.Location = new System.Drawing.Point(342, 12);
-            listView1.MultiSelect = false;
-            listView1.Name = "listView1";
-            listView1.Size = new System.Drawing.Size(657, 426);
-            listView1.TabIndex = 1;
-            listView1.UseCompatibleStateImageBehavior = false;
-            listView1.View = System.Windows.Forms.View.Details;
-            listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(listView1_ItemSelectionChanged);
+            this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(342, 12);
+            this.listView1.MultiSelect = false;
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(657, 426);
+            this.listView1.TabIndex = 1;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
             // ColumnItemName
             // 
@@ -119,6 +119,7 @@ namespace Grocery_Helper_GUI
             // ColumnItemPPM
             // 
             this.ColumnItemPPM.Text = "$ / Meal";
+            this.ColumnItemPPM.Width = 64;
             // 
             // buttonLoad
             // 
@@ -142,15 +143,15 @@ namespace Grocery_Helper_GUI
             // 
             // textBoxCat
             // 
-            textBoxCat.Location = new System.Drawing.Point(6, 21);
-            textBoxCat.Name = "textBoxCat";
-            textBoxCat.Size = new System.Drawing.Size(150, 22);
-            textBoxCat.TabIndex = 5;
-            textBoxCat.Text = "Snacks";
+            this.textBoxCat.Location = new System.Drawing.Point(6, 21);
+            this.textBoxCat.Name = "textBoxCat";
+            this.textBoxCat.Size = new System.Drawing.Size(150, 22);
+            this.textBoxCat.TabIndex = 5;
+            this.textBoxCat.Text = "Snacks";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(textBoxCat);
+            this.groupBox1.Controls.Add(this.textBoxCat);
             this.groupBox1.Controls.Add(this.buttonLoad);
             this.groupBox1.Controls.Add(this.buttonSave);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -169,11 +170,11 @@ namespace Grocery_Helper_GUI
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.buttonRemoveItem);
             this.groupBox2.Controls.Add(this.buttonAddItem);
-            this.groupBox2.Controls.Add(textBoxMeals);
-            this.groupBox2.Controls.Add(textBoxPrice);
-            this.groupBox2.Controls.Add(textBoxSize);
-            this.groupBox2.Controls.Add(textBoxCatEdit);
-            this.groupBox2.Controls.Add(textBoxName);
+            this.groupBox2.Controls.Add(this.textBoxMeals);
+            this.groupBox2.Controls.Add(this.textBoxPrice);
+            this.groupBox2.Controls.Add(this.textBoxSize);
+            this.groupBox2.Controls.Add(this.textBoxCatEdit);
+            this.groupBox2.Controls.Add(this.textBoxName);
             this.groupBox2.Location = new System.Drawing.Point(12, 80);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(317, 284);
@@ -248,38 +249,38 @@ namespace Grocery_Helper_GUI
             // 
             // textBoxMeals
             // 
-            textBoxMeals.Location = new System.Drawing.Point(119, 191);
-            textBoxMeals.Name = "textBoxMeals";
-            textBoxMeals.Size = new System.Drawing.Size(100, 22);
-            textBoxMeals.TabIndex = 4;
+            this.textBoxMeals.Location = new System.Drawing.Point(119, 191);
+            this.textBoxMeals.Name = "textBoxMeals";
+            this.textBoxMeals.Size = new System.Drawing.Size(100, 22);
+            this.textBoxMeals.TabIndex = 4;
             // 
             // textBoxPrice
             // 
-            textBoxPrice.Location = new System.Drawing.Point(119, 151);
-            textBoxPrice.Name = "textBoxPrice";
-            textBoxPrice.Size = new System.Drawing.Size(100, 22);
-            textBoxPrice.TabIndex = 3;
+            this.textBoxPrice.Location = new System.Drawing.Point(119, 151);
+            this.textBoxPrice.Name = "textBoxPrice";
+            this.textBoxPrice.Size = new System.Drawing.Size(100, 22);
+            this.textBoxPrice.TabIndex = 3;
             // 
             // textBoxSize
             // 
-            textBoxSize.Location = new System.Drawing.Point(119, 113);
-            textBoxSize.Name = "textBoxSize";
-            textBoxSize.Size = new System.Drawing.Size(100, 22);
-            textBoxSize.TabIndex = 2;
+            this.textBoxSize.Location = new System.Drawing.Point(119, 113);
+            this.textBoxSize.Name = "textBoxSize";
+            this.textBoxSize.Size = new System.Drawing.Size(100, 22);
+            this.textBoxSize.TabIndex = 2;
             // 
             // textBoxCatEdit
             // 
-            textBoxCatEdit.Location = new System.Drawing.Point(119, 74);
-            textBoxCatEdit.Name = "textBoxCatEdit";
-            textBoxCatEdit.Size = new System.Drawing.Size(192, 22);
-            textBoxCatEdit.TabIndex = 1;
+            this.textBoxCatEdit.Location = new System.Drawing.Point(119, 74);
+            this.textBoxCatEdit.Name = "textBoxCatEdit";
+            this.textBoxCatEdit.Size = new System.Drawing.Size(192, 22);
+            this.textBoxCatEdit.TabIndex = 1;
             // 
             // textBoxName
             // 
-            textBoxName.Location = new System.Drawing.Point(119, 32);
-            textBoxName.Name = "textBoxName";
-            textBoxName.Size = new System.Drawing.Size(192, 22);
-            textBoxName.TabIndex = 0;
+            this.textBoxName.Location = new System.Drawing.Point(119, 32);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(192, 22);
+            this.textBoxName.TabIndex = 0;
             // 
             // Form1
             // 
@@ -288,7 +289,7 @@ namespace Grocery_Helper_GUI
             this.ClientSize = new System.Drawing.Size(1016, 450);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(listView1);
+            this.Controls.Add(this.listView1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -321,13 +322,13 @@ namespace Grocery_Helper_GUI
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        public static System.Windows.Forms.TextBox textBoxMeals;
-        public static System.Windows.Forms.TextBox textBoxPrice;
-        public static System.Windows.Forms.TextBox textBoxSize;
-        public static System.Windows.Forms.TextBox textBoxCatEdit;
-        public static System.Windows.Forms.TextBox textBoxName;
-        public static System.Windows.Forms.TextBox textBoxCat;
-        public static System.Windows.Forms.ListView listView1;
+        public System.Windows.Forms.TextBox textBoxMeals;
+        public System.Windows.Forms.TextBox textBoxPrice;
+        public System.Windows.Forms.TextBox textBoxSize;
+        public System.Windows.Forms.TextBox textBoxCatEdit;
+        public System.Windows.Forms.TextBox textBoxName;
+        public System.Windows.Forms.TextBox textBoxCat;
+        public System.Windows.Forms.ListView listView1;
     }
 }
 
