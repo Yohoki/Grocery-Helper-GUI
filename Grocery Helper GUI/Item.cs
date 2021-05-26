@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Grocery_Helper_GUI
 {
@@ -21,7 +14,11 @@ namespace Grocery_Helper_GUI
 
 
         //Use WriteLine(ItemList) to display this string.
-        //public override string ToString(string? Print)
+        /// <summary>
+        /// Create string from Item. Returns text for saving to txt file if "Save" is passed as parameter.
+        /// </summary>
+        /// <param name="Option">Null string formats text to display on listView1. "Save" string formats text for parsing from txt.</param>
+        /// <returns></returns>
         public string ToString(string Option)
         {
             if (Option == "Save")
@@ -73,7 +70,7 @@ namespace Grocery_Helper_GUI
         {
             // A null value means that this object is greater.
             if (compareItem == null) { return 1; }
-            else { return this.ItemPrice.CompareTo(compareItem.ItemPrice); }
+            else { return this.ItemName.CompareTo(compareItem.ItemName); }
         }
     }
 }

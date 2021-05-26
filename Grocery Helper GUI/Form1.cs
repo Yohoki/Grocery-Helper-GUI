@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
@@ -23,14 +17,15 @@ namespace Grocery_Helper_GUI
 
         private List<Item> Save(List<Item> Itemlist)
         {
-            StreamWriter SaveFile = File.CreateText($"D:/Test/{textBoxCat.Text.ToString()}.txt");
+            StreamWriter SaveFile = File.CreateText($"D:/Test/{textBoxCat.Text}.txt");
             foreach (Item aItem in ItemList)
             {
                 SaveFile.WriteLine(aItem.ToString("Save"));
                 SaveFile.Flush();
             }
             SaveFile.Close();
-            Process.Start("notepad.exe", $"D:/Test/{textBoxCat.Text.ToString()}.txt");
+            //Open notepad after saving. Not needed anymore.
+            //Process.Start("notepad.exe", $"D:/Test/{textBoxCat.Text}.txt");
             return ItemList;
         }
         public static List<Item> Init()
@@ -74,33 +69,19 @@ namespace Grocery_Helper_GUI
 
         private void Print(List<Item> Itemlist)
         {
-            int ID = 0;
             listView1.Items.Clear();
-
-            foreach (Item aItem in ItemList)
+            for (int Index = 0; Index < Itemlist.Count; Index++)
             {
                 listView1.Items.Add(new ListViewItem(new string[] {
-                    ItemList[ID].ItemName,
-                    ItemList[ID].ItemCat,
-                    ItemList[ID].ItemSize.ToString(),
-                    Convert.ToDouble(ItemList[ID].ItemPrice).ToString("C"),
-                    ItemList[ID].ItemMeals.ToString(),
-                    (Convert.ToDouble(ItemList[ID].ItemPrice) / Convert.ToDouble(ItemList[ID].ItemSize)).ToString("C"),
-                    (Convert.ToDouble(ItemList[ID].ItemPrice) / Convert.ToDouble(ItemList[ID].ItemMeals)).ToString("C")
+                ItemList[Index].ItemName,
+                ItemList[Index].ItemCat,
+                ItemList[Index].ItemSize.ToString(),
+                Convert.ToDouble(ItemList[Index].ItemPrice).ToString("C"),
+                ItemList[Index].ItemMeals.ToString(),
+                (Convert.ToDouble(ItemList[Index].ItemPrice) / Convert.ToDouble(ItemList[Index].ItemSize)).ToString("C"),
+                (Convert.ToDouble(ItemList[Index].ItemPrice) / Convert.ToDouble(ItemList[Index].ItemMeals)).ToString("C")
                 }));
-                ID++;
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //ItemList.Sort();
-            //Print(ItemList); <---by Price
-            ItemList.Sort(delegate (Item x, Item y)
-            {
-                return (x.ItemPrice / x.ItemSize).CompareTo((y.ItemPrice / y.ItemSize));
-            });
-            Print(ItemList);
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
@@ -125,7 +106,7 @@ namespace Grocery_Helper_GUI
 
         private void buttonAddItem_Click(object sender, EventArgs e)
         {
-            if (   !String.IsNullOrEmpty(textBoxName.Text)
+            if (!String.IsNullOrEmpty(textBoxName.Text)
                 && !String.IsNullOrEmpty(textBoxCatEdit.Text)
                 && !String.IsNullOrEmpty(textBoxSize.Text)
                 && !String.IsNullOrEmpty(textBoxPrice.Text)
@@ -149,16 +130,35 @@ namespace Grocery_Helper_GUI
         {
             if (listView1.SelectedItems.Count == 0) { return; }
             int Index = ItemList.FindIndex(
-                listIndex => 
+                listIndex =>
                 listIndex.ItemName.Equals(
                     listView1.SelectedItems[0].Text,
                     StringComparison.Ordinal
-            )   );
-            textBoxName.Text    = ItemList[Index].ItemName;
+            ));
+            textBoxName.Text = ItemList[Index].ItemName;
             textBoxCatEdit.Text = ItemList[Index].ItemCat;
-            textBoxSize.Text    = ItemList[Index].ItemSize.ToString();
-            textBoxPrice.Text   = ItemList[Index].ItemPrice.ToString();
-            textBoxMeals.Text   = ItemList[Index].ItemMeals.ToString();
+            textBoxSize.Text = ItemList[Index].ItemSize.ToString();
+            textBoxPrice.Text = ItemList[Index].ItemPrice.ToString();
+            textBoxMeals.Text = ItemList[Index].ItemMeals.ToString();
+        }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            ItemList.Sort(delegate (Item x, Item y)
+            {
+                switch (e.Column)
+                {
+                    default: return x.ItemName.CompareTo(y.ItemName);
+                    case 1:  return x.ItemCat.CompareTo(y.ItemCat);
+                    case 2:  return x.ItemSize.CompareTo(y.ItemSize);
+                    case 3:  return x.ItemPrice.CompareTo(y.ItemPrice);
+                    case 4:  return x.ItemMeals.CompareTo(y.ItemMeals);
+                    case 5:  return (x.ItemPrice / x.ItemSize).CompareTo((y.ItemPrice / y.ItemSize));
+                    case 6:  return (x.ItemPrice / x.ItemMeals).CompareTo((y.ItemPrice / y.ItemMeals));
+                }
+                });
+                Print(ItemList);
+                return;
         }
     }
 }
