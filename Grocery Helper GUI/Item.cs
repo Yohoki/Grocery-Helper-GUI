@@ -11,9 +11,6 @@ namespace Grocery_Helper_GUI
         public double ItemSize { get; set; }
         public double ItemPrice { get; set; }
 
-
-
-        //Use WriteLine(ItemList) to display this string.
         /// <summary>
         /// Create string from Item. Returns text for saving to txt file if "Save" is passed as parameter.
         /// </summary>
@@ -21,25 +18,20 @@ namespace Grocery_Helper_GUI
         /// <returns></returns>
         public string ToString(string Option)
         {
-            if (Option == "Save")
-            {
-                return (
-                      ItemName + "^"
+            return Option == "Save"
+                    ? ItemName + "^"
                     + ItemCat + "^"
                     + ItemSize + "^"
                     + ItemPrice + "^"
                     + ItemMeals
-                );
-            }
-            return (
-                      ItemName.PadRight(21, ' ')
+
+                    : ItemName.PadRight(21, ' ')
                     + ItemCat.PadRight(8, ' ')
                     + ItemSize.ToString().PadRight(8, ' ')
                     + ItemPrice.ToString("C").PadRight(8, ' ')
                     + ItemMeals.ToString().PadRight(8, ' ')
                     + (ItemPrice / ItemSize).ToString("C").PadRight(8, ' ')
-                    + (ItemPrice / ItemMeals).ToString("C").PadRight(8, ' ')
-                   );
+                    + (ItemPrice / ItemMeals).ToString("C").PadRight(8, ' ');
         }
 
         //Use **ItemList.Remove(new Item() { ItemName = "Chex Mix" });** to check if item can be deleted.
@@ -47,8 +39,7 @@ namespace Grocery_Helper_GUI
         {
             if (obj == null) return false;
             Item objAsItem = obj as Item;
-            if (objAsItem == null) return false;
-            else return Equals(objAsItem);
+            return objAsItem == null ? false : Equals(objAsItem);
         }
 
         // Not sure if needed. Can get hash from ItemNames, but not really useful for this project.
@@ -61,16 +52,14 @@ namespace Grocery_Helper_GUI
         //Use** ItemList.Remove(new Item() { ItemName = "Chex Mix" });** to delete the whole row.
         public bool Equals(Item other)
         {
-            if (other == null) return false;
-            return (this.ItemName.ToLower().Equals(other.ItemName.ToLower()));
+            return other == null ? false : this.ItemName.ToLower().Equals(other.ItemName.ToLower());
         }
 
         // Default comparer for Item type.
         public int CompareTo(Item compareItem)
         {
             // A null value means that this object is greater.
-            if (compareItem == null) { return 1; }
-            else { return this.ItemName.CompareTo(compareItem.ItemName); }
+            return compareItem == null ? 1 : this.ItemName.CompareTo(compareItem.ItemName);
         }
     }
 }

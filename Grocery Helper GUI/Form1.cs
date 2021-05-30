@@ -9,46 +9,50 @@ namespace Grocery_Helper_GUI
 {
     public partial class Form1 : Form
     {
-        List<Item> ItemList = new List<Item>(Init());
+        List<Item> ItemList = new List<Item>();
+        private const string dir = "./Grocery Lists";
 
         public Form1()
         {
             InitializeComponent();
+            InitFilesList();
+            comboBoxFilename.SelectedIndex = 0;
+        }
+
+        public void InitFilesList()
+        {
+            comboBoxFilename.Items.Clear();
+            if (!Directory.Exists(dir)) { Directory.CreateDirectory(dir); }
+            string[] files = Directory.GetFiles(dir);
+            foreach (string filePath in files) { comboBoxFilename.Items.Add(Path.GetFileName(filePath)); }
+            comboBoxFilename.Items.Add("New...");
         }
 
         private List<Item> Save(List<Item> Itemlist)
         {
-            if (String.IsNullOrEmpty(textBoxCat?.Text)) { MessageBox.Show("Please name your file!", "Error: Filename Required"); return ItemList; }
-            StreamWriter SaveFile = File.CreateText($"./Grocery Lists/{textBoxCat.Text}.txt");
-            foreach (Item aItem in ItemList)
+            if (string.IsNullOrEmpty(comboBoxFilename.Text)) { MessageBox.Show("Please name your file!", "Error: Filename Required"); return ItemList; }
+            Regex FilenameTest = new Regex("^[^<>:;,?\" *|/]+$");
+            if (!Regex.Match(comboBoxFilename.Text, FilenameTest.ToString()).Success)
             {
-                SaveFile.WriteLine(aItem.ToString("Save"));
+                MessageBox.Show("Only Valid file names are allowed. Please use valid characters only", "Error: Filename Invalid"); return ItemList;
+            }
+            StreamWriter SaveFile = File.CreateText($"{dir}/{comboBoxFilename.Text}");
+            foreach (Item item in ItemList)
+            {
+                SaveFile.WriteLine(item.ToString("Save"));
                 SaveFile.Flush();
             }
             SaveFile.Close();
+            InitFilesList();
             return ItemList;
         }
-        public static List<Item> Init()
-        {
-            List<Item> ItemList = new List<Item>();
 
-            ItemList.Add(new Item()
-            {
-                ItemName = "",
-                ItemCat = "",
-                ItemSize = 0,
-                ItemPrice = 0,
-                ItemMeals = 0
-            });
-            return ItemList;
-        }
         public List<Item> LoadFile(List<Item> ItemList)
         {
-
-            if (!File.Exists($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt")) { MessageBox.Show("The filename you have entered cannot be found.", "Error: File Not Found"); return ItemList; }
-            if (!String.IsNullOrEmpty(textBoxCat.Text))
+            if (!File.Exists($"{dir}/{comboBoxFilename.Text.ToLower()}")) { MessageBox.Show("The filename you have entered cannot be found.", "Error: File Not Found"); return ItemList; }
+            if (!string.IsNullOrEmpty(comboBoxFilename.Text))
             {
-                string[] LoadFile = File.ReadAllLines($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt");
+                string[] LoadFile = File.ReadAllLines($"{dir}/{comboBoxFilename.Text.ToLower()}");
 
                 foreach (string Line in LoadFile)
                 {
@@ -84,43 +88,44 @@ namespace Grocery_Helper_GUI
             }
         }
 
-        private void buttonLoad_Click(object sender, EventArgs e)
+        private void ButtonLoad_Click(object sender, EventArgs e)
         {
             ItemList.Clear();
             LoadFile(ItemList);
             Print(ItemList);
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void ButtonSave_Click(object sender, EventArgs e)
         {
             Save(ItemList);
         }
 
-        private void buttonRemoveItem_Click(object sender, EventArgs e)
+        private void ButtonRemoveItem_Click(object sender, EventArgs e)
         {
             ItemList.Remove(new Item() { ItemName = textBoxName.Text });
             Print(ItemList);
         }
 
-        private void buttonAddItem_Click(object sender, EventArgs e)
+        private void ButtonAddItem_Click(object sender, EventArgs e)
         {
-            if (   String.IsNullOrEmpty(textBoxName.Text)
-                || String.IsNullOrEmpty(textBoxCatEdit.Text)
-                || String.IsNullOrEmpty(textBoxSize.Text)
-                || String.IsNullOrEmpty(textBoxPrice.Text)
-                || String.IsNullOrEmpty(textBoxMeals.Text)
+            if (   string.IsNullOrEmpty(textBoxName.Text)
+                || string.IsNullOrEmpty(textBoxCat.Text)
+                || string.IsNullOrEmpty(textBoxSize.Text)
+                || string.IsNullOrEmpty(textBoxPrice.Text)
+                || string.IsNullOrEmpty(textBoxMeals.Text)
                 ) { MessageBox.Show("Please fill in all boxes!", "Error: Empty Box Detected"); return; }
 
-            if (   !Regex.Match(textBoxPrice.Text, "^\\d*(\\.\\d+)?$").Success
-                || !Regex.Match(textBoxSize.Text, "^\\d*(\\.\\d+)?$").Success
-                || !Regex.Match(textBoxMeals.Text, "^\\d*(\\.\\d+)?$").Success
+            Regex NumbersTest = new Regex("^\\d*(\\.\\d+)?$");
+            if (   !Regex.Match(textBoxPrice.Text, NumbersTest.ToString()).Success
+                || !Regex.Match(textBoxSize.Text, NumbersTest.ToString()).Success
+                || !Regex.Match(textBoxMeals.Text, NumbersTest.ToString()).Success
                 ) { MessageBox.Show("Make sure only Numbers and a decimal are in Price, Size and Meals boxes.", "Error: Non-Number Detected"); return; }
 
             ItemList.Remove(new Item() { ItemName = textBoxName.Text });
             ItemList.Add(new Item()
             {
                 ItemName = textBoxName.Text,
-                ItemCat = textBoxCatEdit.Text,
+                ItemCat = textBoxCat.Text,
                 ItemSize = Convert.ToDouble(textBoxSize.Text),
                 ItemPrice = Convert.ToDouble(textBoxPrice.Text),
                 ItemMeals = Convert.ToDouble(textBoxMeals.Text)
@@ -128,7 +133,7 @@ namespace Grocery_Helper_GUI
             Print(ItemList);
         }
 
-        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void ListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (listView1.SelectedItems.Count == 0) { return; }
             int Index = ItemList.FindIndex(
@@ -138,13 +143,13 @@ namespace Grocery_Helper_GUI
                     StringComparison.Ordinal
             ));
             textBoxName.Text = ItemList[Index].ItemName;
-            textBoxCatEdit.Text = ItemList[Index].ItemCat;
+            textBoxCat.Text = ItemList[Index].ItemCat;
             textBoxSize.Text = ItemList[Index].ItemSize.ToString();
             textBoxPrice.Text = ItemList[Index].ItemPrice.ToString();
             textBoxMeals.Text = ItemList[Index].ItemMeals.ToString();
         }
 
-        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void ListView1_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             ItemList.Sort(delegate (Item x, Item y)
             {
@@ -160,7 +165,6 @@ namespace Grocery_Helper_GUI
                 }
             });
             Print(ItemList);
-            //return;
         }
     }
 }

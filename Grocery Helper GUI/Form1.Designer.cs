@@ -40,7 +40,6 @@ namespace Grocery_Helper_GUI
             this.ColumnItemPPM = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonLoad = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
-            this.textBoxCat = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -53,8 +52,9 @@ namespace Grocery_Helper_GUI
             this.textBoxMeals = new System.Windows.Forms.TextBox();
             this.textBoxPrice = new System.Windows.Forms.TextBox();
             this.textBoxSize = new System.Windows.Forms.TextBox();
-            this.textBoxCatEdit = new System.Windows.Forms.TextBox();
+            this.textBoxCat = new System.Windows.Forms.TextBox();
             this.textBoxName = new System.Windows.Forms.TextBox();
+            this.comboBoxFilename = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -78,8 +78,8 @@ namespace Grocery_Helper_GUI
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
+            this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListView1_ColumnClick);
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListView1_ItemSelectionChanged);
             // 
             // ColumnItemName
             // 
@@ -93,7 +93,7 @@ namespace Grocery_Helper_GUI
             // 
             // ColumnItemSize
             // 
-            this.ColumnItemSize.Text = "Ounces";
+            this.ColumnItemSize.Text = "Size";
             // 
             // ColumnItemPrice
             // 
@@ -105,7 +105,7 @@ namespace Grocery_Helper_GUI
             // 
             // ColumnItemPPS
             // 
-            this.ColumnItemPPS.Text = "$ / Oz";
+            this.ColumnItemPPS.Text = "$ / Size";
             // 
             // ColumnItemPPM
             // 
@@ -120,7 +120,7 @@ namespace Grocery_Helper_GUI
             this.buttonLoad.TabIndex = 2;
             this.buttonLoad.Text = "Load";
             this.buttonLoad.UseVisualStyleBackColor = true;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            this.buttonLoad.Click += new System.EventHandler(this.ButtonLoad_Click);
             // 
             // buttonSave
             // 
@@ -130,19 +130,11 @@ namespace Grocery_Helper_GUI
             this.buttonSave.TabIndex = 3;
             this.buttonSave.Text = "Save";
             this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // textBoxCat
-            // 
-            this.textBoxCat.Location = new System.Drawing.Point(6, 21);
-            this.textBoxCat.Name = "textBoxCat";
-            this.textBoxCat.Size = new System.Drawing.Size(150, 22);
-            this.textBoxCat.TabIndex = 5;
-            this.textBoxCat.Text = "Snacks";
+            this.buttonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBoxCat);
+            this.groupBox1.Controls.Add(this.comboBoxFilename);
             this.groupBox1.Controls.Add(this.buttonLoad);
             this.groupBox1.Controls.Add(this.buttonSave);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -164,7 +156,7 @@ namespace Grocery_Helper_GUI
             this.groupBox2.Controls.Add(this.textBoxMeals);
             this.groupBox2.Controls.Add(this.textBoxPrice);
             this.groupBox2.Controls.Add(this.textBoxSize);
-            this.groupBox2.Controls.Add(this.textBoxCatEdit);
+            this.groupBox2.Controls.Add(this.textBoxCat);
             this.groupBox2.Controls.Add(this.textBoxName);
             this.groupBox2.Location = new System.Drawing.Point(12, 80);
             this.groupBox2.Name = "groupBox2";
@@ -226,7 +218,7 @@ namespace Grocery_Helper_GUI
             this.buttonRemoveItem.TabIndex = 6;
             this.buttonRemoveItem.Text = "Remove Item";
             this.buttonRemoveItem.UseVisualStyleBackColor = true;
-            this.buttonRemoveItem.Click += new System.EventHandler(this.buttonRemoveItem_Click);
+            this.buttonRemoveItem.Click += new System.EventHandler(this.ButtonRemoveItem_Click);
             // 
             // buttonAddItem
             // 
@@ -236,7 +228,7 @@ namespace Grocery_Helper_GUI
             this.buttonAddItem.TabIndex = 5;
             this.buttonAddItem.Text = "Add/Edit Item";
             this.buttonAddItem.UseVisualStyleBackColor = true;
-            this.buttonAddItem.Click += new System.EventHandler(this.buttonAddItem_Click);
+            this.buttonAddItem.Click += new System.EventHandler(this.ButtonAddItem_Click);
             // 
             // textBoxMeals
             // 
@@ -259,12 +251,12 @@ namespace Grocery_Helper_GUI
             this.textBoxSize.Size = new System.Drawing.Size(100, 22);
             this.textBoxSize.TabIndex = 2;
             // 
-            // textBoxCatEdit
+            // textBoxCat
             // 
-            this.textBoxCatEdit.Location = new System.Drawing.Point(119, 74);
-            this.textBoxCatEdit.Name = "textBoxCatEdit";
-            this.textBoxCatEdit.Size = new System.Drawing.Size(192, 22);
-            this.textBoxCatEdit.TabIndex = 1;
+            this.textBoxCat.Location = new System.Drawing.Point(119, 74);
+            this.textBoxCat.Name = "textBoxCat";
+            this.textBoxCat.Size = new System.Drawing.Size(192, 22);
+            this.textBoxCat.TabIndex = 1;
             // 
             // textBoxName
             // 
@@ -272,6 +264,14 @@ namespace Grocery_Helper_GUI
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(192, 22);
             this.textBoxName.TabIndex = 0;
+            // 
+            // comboBoxFilename
+            // 
+            this.comboBoxFilename.FormattingEnabled = true;
+            this.comboBoxFilename.Location = new System.Drawing.Point(6, 21);
+            this.comboBoxFilename.Name = "comboBoxFilename";
+            this.comboBoxFilename.Size = new System.Drawing.Size(150, 24);
+            this.comboBoxFilename.TabIndex = 8;
             // 
             // Form1
             // 
@@ -285,7 +285,6 @@ namespace Grocery_Helper_GUI
             this.Name = "Form1";
             this.Text = "Grocery Helper v1.01";
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
@@ -314,10 +313,10 @@ namespace Grocery_Helper_GUI
         public System.Windows.Forms.TextBox textBoxMeals;
         public System.Windows.Forms.TextBox textBoxPrice;
         public System.Windows.Forms.TextBox textBoxSize;
-        public System.Windows.Forms.TextBox textBoxCatEdit;
-        public System.Windows.Forms.TextBox textBoxName;
         public System.Windows.Forms.TextBox textBoxCat;
+        public System.Windows.Forms.TextBox textBoxName;
         public System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ComboBox comboBoxFilename;
     }
 }
 
