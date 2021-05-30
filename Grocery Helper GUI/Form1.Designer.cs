@@ -283,7 +283,7 @@ namespace Grocery_Helper_GUI
             this.Controls.Add(this.listView1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Grocery Helper";
+            this.Text = "Grocery Helper v1.01";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

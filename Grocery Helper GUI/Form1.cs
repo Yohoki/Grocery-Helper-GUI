@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Grocery_Helper_GUI
 {
@@ -17,6 +18,7 @@ namespace Grocery_Helper_GUI
 
         private List<Item> Save(List<Item> Itemlist)
         {
+            if (String.IsNullOrEmpty(textBoxCat?.Text)) { MessageBox.Show("Please name your file!", "Error: Filename Required"); return ItemList; }
             StreamWriter SaveFile = File.CreateText($"./Grocery Lists/{textBoxCat.Text}.txt");
             foreach (Item aItem in ItemList)
             {
@@ -24,8 +26,6 @@ namespace Grocery_Helper_GUI
                 SaveFile.Flush();
             }
             SaveFile.Close();
-            //Open notepad after saving. Not needed anymore.
-            //Process.Start("notepad.exe", $"./Grocery Lists/{textBoxCat.Text}.txt");
             return ItemList;
         }
         public static List<Item> Init()
@@ -45,7 +45,7 @@ namespace Grocery_Helper_GUI
         public List<Item> LoadFile(List<Item> ItemList)
         {
 
-            if (!File.Exists($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt")) { MessageBox.Show("File not Found"); return ItemList; }
+            if (!File.Exists($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt")) { MessageBox.Show("The filename you have entered cannot be found.", "Error: File Not Found"); return ItemList; }
             if (!String.IsNullOrEmpty(textBoxCat.Text))
             {
                 string[] LoadFile = File.ReadAllLines($"./Grocery Lists/{textBoxCat.Text?.ToLower()}.txt");
@@ -93,9 +93,7 @@ namespace Grocery_Helper_GUI
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(listView1.ItemName.text.ToString());
             Save(ItemList);
-            //MessageBox.Show(Item.ItemName);
         }
 
         private void buttonRemoveItem_Click(object sender, EventArgs e)
@@ -106,25 +104,28 @@ namespace Grocery_Helper_GUI
 
         private void buttonAddItem_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(textBoxName.Text)
-                && !String.IsNullOrEmpty(textBoxCatEdit.Text)
-                && !String.IsNullOrEmpty(textBoxSize.Text)
-                && !String.IsNullOrEmpty(textBoxPrice.Text)
-                && !String.IsNullOrEmpty(textBoxMeals.Text)
-                )
+            if (   String.IsNullOrEmpty(textBoxName.Text)
+                || String.IsNullOrEmpty(textBoxCatEdit.Text)
+                || String.IsNullOrEmpty(textBoxSize.Text)
+                || String.IsNullOrEmpty(textBoxPrice.Text)
+                || String.IsNullOrEmpty(textBoxMeals.Text)
+                ) { MessageBox.Show("Please fill in all boxes!", "Error: Empty Box Detected"); return; }
+
+            if (   !Regex.Match(textBoxPrice.Text, "^\\d*(\\.\\d+)?$").Success
+                || !Regex.Match(textBoxSize.Text, "^\\d*(\\.\\d+)?$").Success
+                || !Regex.Match(textBoxMeals.Text, "^\\d*(\\.\\d+)?$").Success
+                ) { MessageBox.Show("Make sure only Numbers and a decimal are in Price, Size and Meals boxes.", "Error: Non-Number Detected"); return; }
+
+            ItemList.Remove(new Item() { ItemName = textBoxName.Text });
+            ItemList.Add(new Item()
             {
-                ItemList.Remove(new Item() { ItemName = textBoxName.Text });
-                ItemList.Add(new Item()
-                {
-                    ItemName = textBoxName.Text,
-                    ItemCat = textBoxCatEdit.Text,
-                    ItemSize = Convert.ToDouble(textBoxSize.Text),
-                    ItemPrice = Convert.ToDouble(textBoxPrice.Text),
-                    ItemMeals = Convert.ToDouble(textBoxMeals.Text)
-                });
-                Print(ItemList);
-            }
-            MessageBox.Show("Please fill in all boxes!");
+                ItemName = textBoxName.Text,
+                ItemCat = textBoxCatEdit.Text,
+                ItemSize = Convert.ToDouble(textBoxSize.Text),
+                ItemPrice = Convert.ToDouble(textBoxPrice.Text),
+                ItemMeals = Convert.ToDouble(textBoxMeals.Text)
+            });
+            Print(ItemList);
         }
 
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
